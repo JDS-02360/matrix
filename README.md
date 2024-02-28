@@ -1,3 +1,3 @@
 # matrix
 
-A unfinished calculator to solve matrix multiplication and addition problems
+A calculator to solve matrix multiplication and addition problems

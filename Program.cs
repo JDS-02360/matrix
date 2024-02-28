@@ -5,13 +5,15 @@ TODO:
     Implement addition - DONE
     Split output matrix on arrays (m1[0], m1[1]) - DONE
     Write exceptions to log file - DONE
-    Add zeroes to beginning of numbers, up to the longest number of digits in the coloumn
+    Add zeroes to beginning of numbers, up to the longest number of digits in the column - DONE
         05 21 048
         37 09 110
         02 70 006
     Get input matrices from user
 
 */
+
+using System.Text;
 
 int[][] m1 = [
     [0, 1, 3],
@@ -109,11 +111,80 @@ void MatrixWrite(int[][] m)
 {
     try
     {
-        foreach (int[] row in m)
+        string[][] output = new string[m.Length][];
+        string[][] columns = new string[m.Length][];
+
+        for (int i = 0; i < output.Length; i++)
         {
-            foreach (int num in row)
+            output[i] = new string[m[i].Length];
+            columns[i] = new string[m[i].Length];
+        }
+
+        for (int i = 0; i < m.Length; i++)
+        {
+            for (int j = 0; j < m[i].Length; j++)
             {
-                Console.Write($"{num} ");
+                output[i][j] = m[i][j].ToString();
+            }
+        }
+
+        for (int i = 0; i < output.Length; i++)
+        {
+            for (int j = 0; j < output[i].Length; j++)
+            {
+                for (int k = 0; k < output.Length; k++)
+                {
+                    columns[k][j] = output[j][k];
+                }
+            }
+        }
+
+        string[] longest = new string[columns.Length];
+
+        /*
+        
+        Get longest string in column and store in variable so that I can check if string is shorter than it
+        If so, append 0 to the beginning of it, and check again
+
+        */
+
+        for (int i = 0; i < columns.Length; i++)
+        {
+            for (int j = 0; j < columns[i].Length; j++)
+            {
+                longest[i] = columns[i].OrderByDescending(s => s.Length).First();
+            }
+        }
+
+        for (int i = 0; i < columns.Length; i++)
+        {
+            for (int j = 0; j < columns[i].Length; j++)
+            {
+                StringBuilder stringBuilder = new(columns[i][j]);
+
+                while (columns[i][j].Length < longest[i].Length)
+                {
+                    columns[i][j] = stringBuilder.Insert(0, "0").ToString();
+                }
+            }
+        }
+
+        for (int i = 0; i < columns.Length; i++)
+        {
+            for (int j = 0; j < columns[i].Length; j++)
+            {
+                for (int k = 0; k < columns.Length; k++)
+                {
+                    output[k][j] = columns[j][k];
+                }
+            }
+        }
+
+        foreach (string[] row in output)
+        {
+            foreach (string str in row)
+            {
+                Console.Write($"{str} ");
             }
 
             Console.WriteLine();
