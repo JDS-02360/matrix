@@ -1,31 +1,4 @@
-﻿/*
-
-TODO:
-    Implement multiplication - DONE
-    Implement addition - DONE
-    Split output matrix on arrays (m1[0], m1[1]) - DONE
-    Write exceptions to log file - DONE
-    Add zeroes to beginning of numbers, up to the longest number of digits in the column - DONE
-        05 21 048
-        37 09 110
-        02 70 006
-    Get input matrices from user
-
-*/
-
-using System.Text;
-
-int[][] m1 = [
-    [0, 1, 3],
-    [4, 2, 5],
-    [9, 6, 1]
-];
-
-int[][] m2 = [
-    [8, 3, 4],
-    [2, 5, 0],
-    [1, 6, 7]
-];
+﻿using System.Text;
 
 // Replace with wherever you want log.txt to go
 string path = "./log.txt";
@@ -107,6 +80,51 @@ int[][] MatrixAdd(int[][] m1, int[][] m2)
     return output;
 }
 
+int[][] MatrixGet()
+{
+    Start:
+    List<int[]> output = new List<int[]>();
+
+    Console.WriteLine("Enter each row of the matrix, each on a new line (an empty string finishes the matrix):");
+
+    try
+    {
+        while (true)
+        {
+            string input = Console.ReadLine();
+
+            if (string.IsNullOrEmpty(input))
+            {
+                break;
+            }
+
+            string[] splitInput = input.Split(' ');
+            int[] row = new int[splitInput.Length];
+
+            for (int i = 0; i < splitInput.Length; i++)
+            {
+                if (int.TryParse(splitInput[i], out int value))
+                {
+                    row[i] = value;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid input, try again: {0}", splitInput[i]);
+                    goto Start;
+                }
+            }
+
+            output.Add(row);
+        }
+    }
+    catch (Exception e)
+    {
+        ExceptionLog(e);
+    }
+
+    return output.ToArray();;
+}
+
 void MatrixWrite(int[][] m)
 {
     try
@@ -140,13 +158,6 @@ void MatrixWrite(int[][] m)
         }
 
         string[] longest = new string[columns.Length];
-
-        /*
-        
-        Get longest string in column and store in variable so that I can check if string is shorter than it
-        If so, append 0 to the beginning of it, and check again
-
-        */
 
         for (int i = 0; i < columns.Length; i++)
         {
@@ -199,8 +210,14 @@ void MatrixWrite(int[][] m)
     }
 }
 
+int[][] m1 = MatrixGet();
+int[][] m2 = MatrixGet();
+
 int[][] m3 = MatrixMultiply(m1, m2);
 int[][] m4 = MatrixAdd(m1, m2);
 
+Console.WriteLine("Matrix 1 * Matrix 2:");
 MatrixWrite(m3);
+
+Console.WriteLine("Matrix 1 + Matrix 2:");
 MatrixWrite(m4);
